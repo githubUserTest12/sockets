@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
 	struct addrinfo hints, *res, *p;
 	int status;
 	char ipstr[INET6_ADDRSTRLEN];
-
+	
 	if(argc != 2) {
 		fprintf(stderr, "usage: test hostname\n");
 		return 1;
@@ -22,10 +22,10 @@ int main(int argc, char *argv[]) {
 
 	if((status = getaddrinfo(argv[1], NULL, &hints, &res)) != 0) {
 		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(status));
-		return 2;
+		return 1;
 	}
 
-	printf("IP addresses of %s\n\n", argv[1]);
+	printf("IP addresses for %s\n\n", argv[1]);
 
 	for(p = res; p != NULL; p = p->ai_next) {
 		void *addr;
@@ -46,13 +46,13 @@ int main(int argc, char *argv[]) {
 		inet_ntop(p->ai_family, addr, ipstr, sizeof ipstr);
 		printf("  %s: %s\n", ipver, ipstr);
 
-		if((sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) < 0) {
-			perror("socket error");
-		}
+		sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
 
 		bind(sockfd, p->ai_addr, p->ai_addrlen);
 
 		connect(sockfd, p->ai_addr, p->ai_addrlen);
+
+		//listen(sockfd, 10);
 	}
 
 	freeaddrinfo(res);
