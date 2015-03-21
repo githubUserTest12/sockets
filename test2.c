@@ -26,10 +26,24 @@ int main() {
 
 	bind(sockfd, res->ai_addr, res->ai_addrlen);
 
+	struct sockaddr *tmp;
+	int sockaddrlen = sizeof tmp;;
+
+	int status;
+	status = getpeername(sockfd, (struct sockaddr *) tmp, &sockaddrlen);
+	/*
 	listen(sockfd, BACKLOG);
 
 	addr_size = sizeof their_addr;
 
 	new_fd = accept(sockfd, (struct sockaddr *) &their_addr, &addr_size);
+
+	int bytes_received;
+	char *buf;
+	int len;
+
+	bytes_received = recv(sockfd, buf, len, 0);
+	*/
+
 	return 0;
 }

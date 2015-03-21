@@ -48,9 +48,27 @@ int main(int argc, char *argv[]) {
 
 		sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
 
-		bind(sockfd, p->ai_addr, p->ai_addrlen);
+		char hbuf[1024], sbuf[20];
+		struct sockaddr_in *tmp = ipv4;
+		socklen_t sockaddrlen = sizeof tmp;
+		getpeername(sockfd, (struct sockaddr *) tmp, &sockaddrlen);
 
-		connect(sockfd, p->ai_addr, p->ai_addrlen);
+		getnameinfo((struct sockaddr *) tmp, sockaddrlen, hbuf, sizeof hbuf, sbuf, sizeof sbuf, 0);
+		printf("host=%s, serv=%s\n", hbuf, sbuf);
+
+		/*
+		int stat;
+		struct sockaddr *tmp;
+		socklen_t sockaddrlen = sizeof tmp;
+
+		stat = getpeername(sockfd, (struct sockaddr *) tmp, &sockaddrlen);
+		inet_ntop(tmp->sin_family, &(tmp->sin_addr), ipstr, sizeof ipstr);
+		printf(" getpeername: %s\n", ipstr);
+		*/
+
+		//bind(sockfd, p->ai_addr, p->ai_addrlen);
+
+		//connect(sockfd, p->ai_addr, p->ai_addrlen);
 
 		//listen(sockfd, 10);
 	}
